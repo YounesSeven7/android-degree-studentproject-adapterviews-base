@@ -3,4 +3,13 @@
     <string name="add_new_item_description">يمكنك  إضافة ملاحظة إلى القائمة و اختيار نوع ولون الملاحظة.</string>
     <string name="add">اضافة</string>
     <string name="add_note_text">أضف ملاحظة</string>
+    <string name="didnt_add_note">"لم يتم إضافة ملا حضة "</string>
+    <string name="didnt_change">لم يتم تغير شيئ</string>
+    <string name="read_permission_needed_to_access_files">"صلاحية الوصول للصور ضرورية لجهازك "</string>
+    <string name="select_photo">"إختر صورة "</string>
+    <string name="faul_toget_photo">"خطأ في إستراد الصورة "</string>
+    <string name="delet_confirmation">هل أنت متأكد من إزالة العنصر</string>
+    <string name="confirm">تأكيدالإزالة</string>
+    <string name="cancel">"إلغاء الإزالة "</string>
+    <string name="no_text">لا يوجد نص</string>
 </resources>
