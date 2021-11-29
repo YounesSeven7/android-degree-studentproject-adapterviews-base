@@ -14,6 +14,7 @@ import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.barmej.notesapp.activityChangeNote.ActivityNoteCheckDetails;
@@ -89,95 +90,76 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //..........................................................................................jest note
-        if (requestCode == Constants.ADE_NOTE){
-            if (resultCode == Constants.RESULT_CODE_NOTE_VIEW && data != null ){
-                String noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
-                if (!(noteText.isEmpty()) && !(noteText.equals(" "))){
-                    ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
-                    noteItemList.add(new NoteItem(noteText, colorStateList));
-                    addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
-                } else
-                    Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.didnt_add_note, Toast.LENGTH_SHORT).show();
-            }
+        String noteText;
+        if (data != null) {
+            if (requestCode == Constants.ADE_NOTE){
+                if (resultCode == Constants.RESULT_CODE_NOTE_VIEW){
+                    //..........................................................................................jest note
+                    noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
+                    if (!(noteText.isEmpty()) && !(noteText.equals(" "))){
+                        ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
+                        noteItemList.add(new NoteItem(noteText, colorStateList));
+                        addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
+                    } else
+                        Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
+                } else if (resultCode == Constants.RESULT_CODE_NOTE_CHECK_VIEW) {
+                    //..........................................................................................check note
+                    noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
+                    if (!(noteText.isEmpty()) && !(noteText.equals(" "))) {
+                        ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
+                        int isChecked = data.getIntExtra(Constants.IS_CHECKBOX_CHECKED, 3);
 
-        }
+                        CheckNoteItem checkNoteItem = new CheckNoteItem(noteText, colorStateList, isChecked);
+                        noteItemList.add(checkNoteItem);
+                        addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
+                    }
+                } else if (resultCode == Constants.RESULT_CODE_NOTE_PHOTO_VIEW) {
+                        //..........................................................................................photo note
+                        noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
+                        if (!(noteText.isEmpty()) && !(noteText.equals(" "))){
+                            ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
+                            Uri photoUri = data.getParcelableExtra(Constants.ADD_NEW_NOTE_PHOTO);
+                            PhotoNoteItem photoNoteItem = new PhotoNoteItem(noteText, colorStateList, photoUri);
+                            noteItemList.add(photoNoteItem);
+                            addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
+                        } else
+                            Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
 
-        if (requestCode == Constants.CHANGE_NOTE_DETAILS){
-            if (resultCode == RESULT_OK && data != null) {
-                String noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
-                ColorStateList colorStateList = data.getParcelableExtra(Constants.RETURN_BACKGROUND_TO_MAIN);
-                noteItemList.set(myPosition, new NoteItem(noteText, colorStateList));
-                addNotesAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, R.string.didnt_change, Toast.LENGTH_SHORT).show();
-            }
+                    } else {
+                        Toast.makeText(this, R.string.didnt_add_note, Toast.LENGTH_SHORT).show();
+                    }
 
-        }
-        //..........................................................................................check note
-        if (requestCode == Constants.ADE_NOTE){
-            if (resultCode == Constants.RESULT_CODE_NOTE_CHECK_VIEW && data != null){
-                String noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
-                if (!(noteText.isEmpty()) && !(noteText.equals(" "))){
-                    ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
-                    int isChecked = data.getIntExtra(Constants.IS_CHECKBOX_CHECKED, 3);
-
-                    CheckNoteItem checkNoteItem = new CheckNoteItem(noteText, colorStateList, isChecked);
-                    noteItemList.add(checkNoteItem);
-                    addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
-                } else
-                    Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
-
-            } else {
-                Toast.makeText(this, R.string.didnt_add_note, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        if (requestCode == Constants.CHANGE_NOTE_CHECK_DETAILS){
-            if (resultCode == RESULT_OK && data != null){
-                String noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
-                ColorStateList colorStateList = data.getParcelableExtra(Constants.RETURN_BACKGROUND_TO_MAIN);
-                int isChecked = data.getIntExtra(Constants.RETURN_IS_CHECKED_TO_MAIN, 3);
-
-                CheckNoteItem checkNoteItem = new CheckNoteItem(noteText, colorStateList, isChecked);
-                noteItemList.set(myPosition, checkNoteItem);
-                addNotesAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(this, R.string.didnt_change, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        //..........................................................................................photo note
-        if (requestCode == Constants.ADE_NOTE){
-            if (resultCode == Constants.RESULT_CODE_NOTE_PHOTO_VIEW && data != null){
-                String noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
-                if (!(noteText.isEmpty()) && !(noteText.equals(" "))){
-                    ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
-                    Uri photoUri = data.getParcelableExtra(Constants.ADD_NEW_NOTE_PHOTO);
-                    PhotoNoteItem photoNoteItem = new PhotoNoteItem(noteText, colorStateList, photoUri);
-                    noteItemList.add(photoNoteItem);
-                    addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
-                } else
-                    Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
+                }
 
             } else {
-                Toast.makeText(this, R.string.didnt_add_note, Toast.LENGTH_SHORT).show();
-            }
-        }
-
-         if (requestCode == Constants.CHANGE_NOTE_PHOTO_DETAILS ){
-                if (resultCode == RESULT_OK && data != null){
-                    String noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
-                    ColorStateList colorStateList = data.getParcelableExtra(Constants.RETURN_BACKGROUND_TO_MAIN);
-                    Uri photoUri = data.getParcelableExtra(Constants.RETURN_PHOTO_URI_TO_MAIN);
-                    PhotoNoteItem photoNoteItem = new PhotoNoteItem(noteText, colorStateList, photoUri);
-                    noteItemList.set(myPosition, photoNoteItem);
-                    addNotesAdapter.notifyDataSetChanged();
-
-                } else{
-                    Toast.makeText(this, R.string.didnt_change, Toast.LENGTH_SHORT).show();
+                if (resultCode == RESULT_OK){
+                    ColorStateList colorStateList;
+                    switch (requestCode){
+                        case Constants.CHANGE_NOTE_DETAILS:
+                            noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
+                            colorStateList = data.getParcelableExtra(Constants.RETURN_BACKGROUND_TO_MAIN);
+                            noteItemList.set(myPosition, new NoteItem(noteText, colorStateList));
+                            addNotesAdapter.notifyDataSetChanged();
+                            break;
+                        case Constants.CHANGE_NOTE_CHECK_DETAILS:
+                            noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
+                            colorStateList = data.getParcelableExtra(Constants.RETURN_BACKGROUND_TO_MAIN);
+                            int isChecked = data.getIntExtra(Constants.RETURN_IS_CHECKED_TO_MAIN, 3);
+                            CheckNoteItem checkNoteItem = new CheckNoteItem(noteText, colorStateList, isChecked);
+                            noteItemList.set(myPosition, checkNoteItem);
+                            break;
+                        case Constants.CHANGE_NOTE_PHOTO_DETAILS:
+                            noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
+                            colorStateList = data.getParcelableExtra(Constants.RETURN_BACKGROUND_TO_MAIN);
+                            Uri photoUri = data.getParcelableExtra(Constants.RETURN_PHOTO_URI_TO_MAIN);
+                            PhotoNoteItem photoNoteItem = new PhotoNoteItem(noteText, colorStateList, photoUri);
+                            noteItemList.set(myPosition, photoNoteItem);
+                            addNotesAdapter.notifyDataSetChanged();
+                            break;
+                        default:
+                            Toast.makeText(this, R.string.didnt_change, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
                 }
             }
     }
