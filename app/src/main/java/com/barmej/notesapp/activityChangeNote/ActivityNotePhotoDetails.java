@@ -48,9 +48,6 @@ public class ActivityNotePhotoDetails extends AppCompatActivity {
             }
         });
         editText.setText(noteText);
-
-
-
     }
 
     @Override

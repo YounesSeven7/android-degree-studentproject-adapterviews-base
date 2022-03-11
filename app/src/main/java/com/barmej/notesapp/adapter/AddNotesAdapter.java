@@ -1,5 +1,6 @@
 package com.barmej.notesapp.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,7 @@ public class AddNotesAdapter extends RecyclerView.Adapter<AddNotesAdapter.ViewHo
     @Override
     public int getItemViewType(int position) {
         NoteItem noteItem = noteItemList.get(position);
-
-        if(noteItem instanceof PhotoNoteItem  ) {
+        if(noteItem instanceof PhotoNoteItem) {
             return 2;
         } else if (noteItem instanceof CheckNoteItem) {
             return 1;
@@ -50,6 +50,8 @@ public class AddNotesAdapter extends RecyclerView.Adapter<AddNotesAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int itemType) {
+        int number = 0;
+        Log.d("younes", number+"");
         if (itemType == 0) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_note, viewGroup, false);
             return new ViewHolder(view);
@@ -68,6 +70,7 @@ public class AddNotesAdapter extends RecyclerView.Adapter<AddNotesAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+        Log.d("younes", "younes");
         NoteItem noteItem = noteItemList.get(position);
         if(noteItem instanceof PhotoNoteItem) {
             photoViewHolder.onBindPhoto(position);
@@ -82,7 +85,6 @@ public class AddNotesAdapter extends RecyclerView.Adapter<AddNotesAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-
         return noteItemList.size();
     }
 
@@ -182,10 +184,6 @@ public class AddNotesAdapter extends RecyclerView.Adapter<AddNotesAdapter.ViewHo
             linearLayout.setBackgroundTintList(noteItem.getColorStateList());
             textView.setText(noteItem.getNoteText());
             imageView.setImageURI(photoNoteItem.getPhotoUri())
-
-
-
-
             ;
         }
     }

@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(addNotesAdapter);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +100,9 @@ public class MainActivity extends AppCompatActivity {
                         ColorStateList colorStateList = data.getParcelableExtra(Constants.ADD_NEW_NOTE_BACKGROUND);
                         noteItemList.add(new NoteItem(noteText, colorStateList));
                         addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
-                    } else
+                    } else {
                         Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
+                    }
                 } else if (resultCode == Constants.RESULT_CODE_NOTE_CHECK_VIEW) {
                     //..........................................................................................check note
                     noteText = data.getStringExtra(Constants.ADD_NEW_NOTE_TEXT);
@@ -122,13 +123,12 @@ public class MainActivity extends AppCompatActivity {
                             PhotoNoteItem photoNoteItem = new PhotoNoteItem(noteText, colorStateList, photoUri);
                             noteItemList.add(photoNoteItem);
                             addNotesAdapter.notifyItemInserted(noteItemList.size() - 1);
-                        } else
+                        } else {
                             Toast.makeText(this, R.string.no_text, Toast.LENGTH_SHORT).show();
+                        }
 
-                    } else {
-                        Toast.makeText(this, R.string.didnt_add_note, Toast.LENGTH_SHORT).show();
-                    }
-
+                } else {
+                    Toast.makeText(this, R.string.didnt_add_note, Toast.LENGTH_SHORT).show();
                 }
 
             } else {
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                             int isChecked = data.getIntExtra(Constants.RETURN_IS_CHECKED_TO_MAIN, 3);
                             CheckNoteItem checkNoteItem = new CheckNoteItem(noteText, colorStateList, isChecked);
                             noteItemList.set(myPosition, checkNoteItem);
+                            addNotesAdapter.notifyDataSetChanged();
                             break;
                         case Constants.CHANGE_NOTE_PHOTO_DETAILS:
                             noteText = data.getStringExtra(Constants.RETURN_TEXT_TO_MAIN);
@@ -163,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
     }
+    }
+
     private void addNewNote(){
         Intent intent = new Intent(MainActivity.this, ActivityAddNewNote.class);
         startActivityForResult(intent, Constants.ADE_NOTE);
